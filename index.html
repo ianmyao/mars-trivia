@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mars & Space Trivia</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+        const { useState } = React;
+
+        // Simple icon components using SVG
+        const Rocket = ({ className }) => (
+            <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+        );
+
+        const Brain = ({ className }) => (
+            <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+            </svg>
+        );
+
+        const Trophy = ({ className }) => (
+            <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+            </svg>
+        );
+
+        const RotateCcw = ({ className }) => (
+            <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+        );
+
+        const Star = ({ className }) => (
+            <svg className={className} fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+            </svg>
+        );
+
+        const triviaQuestions = [
+          {
+            category: "Mars Settlement",
+            question: "What year did SpaceX first propose colonizing Mars?",
+            options: ["2012", "2016", "2002", "2020"],
+            correct: 2,
+            difficulty: "medium"
+          },
+          {
+            category: "Mars Settlement",
+            question: "What is the approximate delay in communication between Earth and Mars?",
+            options: ["3-22 minutes", "30 seconds", "1 hour", "5 minutes"],
+            correct: 0,
+            difficulty: "hard"
+          },
+          {
+            category: "Mars Facts",
+            question: "How long is a Martian day (sol)?",
+            options: ["20 hours", "24 hours 37 minutes", "30 hours", "22 hours"],
+            correct: 1,
+            difficulty: "medium"
+          },
+          {
+            category: "Space Exploration",
+            question: "Which rover landed on Mars in 2021?",
+            options: ["Curiosity", "Spirit", "Perseverance", "Opportunity"],
+            correct: 2,
+            difficulty: "easy"
+          },
+          {
+            category: "Mars Settlement",
+            question: "What is the main component needed to produce rocket fuel on Mars?",
+            options: ["Nitrogen", "Water ice", "Methane", "Oxygen only"],
+            correct: 1,
+            difficulty: "hard"
+          },
+          {
+            category: "Space History",
+            question: "What year did humans first land on the Moon?",
+            options: ["1965", "1969", "1972", "1967"],
+            correct: 1,
+            difficulty: "easy"
+          },
+          {
+            category: "Mars Facts",
+            question: "What percentage of Earth's gravity does Mars have?",
+            options: ["38%", "50%", "25%", "62%"],
+            correct: 0,
+            difficulty: "medium"
+          },
+          {
+            category: "Space Exploration",
+            question: "Which company is developing the Starship for Mars missions?",
+            options: ["Blue Origin", "NASA", "SpaceX", "Boeing"],
+            correct: 2,
+            difficulty: "easy"
+          },
+          {
+            category: "Mars Settlement",
+            question: "What is the primary challenge for human habitation on Mars?",
+            options: ["Lack of water", "Radiation exposure", "Temperature", "Low oxygen"],
+            correct: 1,
+            difficulty: "medium"
+          },
+          {
+            category: "Space History",
+            question: "Which was the first Mars rover to land successfully?",
+            options: ["Sojourner", "Spirit", "Curiosity", "Pathfinder"],
+            correct: 0,
+            difficulty: "hard"
+          }
+        ];
+
+        function MarsTrivia() {
+          const [gameState, setGameState] = useState('menu');
+          const [currentQuestion, setCurrentQuestion] = useState(0);
+          const [score, setScore] = useState(0);
+          const [selectedAnswer, setSelectedAnswer] = useState(null);
+          const [showResult, setShowResult] = useState(false);
+          const [questions, setQuestions] = useState([]);
+          const [streak, setStreak] = useState(0);
+          const [bestStreak, setBestStreak] = useState(0);
+
+          const startGame = () => {
+            const shuffled = [...triviaQuestions].sort(() => Math.random() - 0.5);
+            setQuestions(shuffled);
+            setCurrentQuestion(0);
+            setScore(0);
+            setStreak(0);
+            setGameState('playing');
+            setShowResult(false);
+            setSelectedAnswer(null);
+          };
+
+          const handleAnswer = (index) => {
+            if (showResult) return;
+            
+            setSelectedAnswer(index);
+            setShowResult(true);
+            
+            const isCorrect = index === questions[currentQuestion].correct;
+            if (isCorrect) {
+              setScore(score + 1);
+              const newStreak = streak + 1;
+              setStreak(newStreak);
+              if (newStreak > bestStreak) {
+                setBestStreak(newStreak);
+              }
+            } else {
+              setStreak(0);
+            }
+          };
+
+          const nextQuestion = () => {
+            if (currentQuestion < questions.length - 1) {
+              setCurrentQuestion(currentQuestion + 1);
+              setSelectedAnswer(null);
+              setShowResult(false);
+            } else {
+              setGameState('results');
+            }
+          };
+
+          const getDifficultyColor = (difficulty) => {
+            switch(difficulty) {
+              case 'easy': return 'text-green-400';
+              case 'medium': return 'text-yellow-400';
+              case 'hard': return 'text-red-400';
+              default: return 'text-gray-400';
+            }
+          };
+
+          if (gameState === 'menu') {
+            return (
+              <div className="min-h-screen bg-gradient-to-b from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center p-4">
+                <div className="max-w-2xl w-full">
+                  <div className="text-center mb-8 animate-pulse">
+                    <Rocket className="w-24 h-24 mx-auto mb-4 text-orange-400" />
+                    <h1 className="text-6xl font-bold text-white mb-4">Mars Trivia</h1>
+                    <p className="text-xl text-purple-300">Test Your Space Knowledge</p>
+                  </div>
+                  
+                  <div className="bg-slate-800/50 backdrop-blur rounded-2xl p-8 border border-purple-500/30 shadow-2xl">
+                    <h2 className="text-2xl font-bold text-white mb-4 flex items-center gap-2">
+                      <Brain className="w-6 h-6 text-purple-400" />
+                      How to Play
+                    </h2>
+                    <ul className="text-purple-200 space-y-2 mb-6">
+                      <li>• Answer 10 questions about Mars settlement and space exploration</li>
+                      <li>• Build a streak by answering correctly</li>
+                      <li>• Questions range from easy to hard difficulty</li>
+                      <li>• Track your high score!</li>
+                    </ul>
+                    
+                    <button
+                      onClick={startGame}
+                      className="w-full bg-gradient-to-r from-orange-500 to-pink-500 text-white py-4 rounded-xl font-bold text-xl hover:from-orange-600 hover:to-pink-600 transition-all transform hover:scale-105 shadow-lg"
+                    >
+                      Start Mission
+                    </button>
+                  </div>
+                  
+                  {bestStreak > 0 && (
+                    <div className="mt-6 text-center">
+                      <p className="text-purple-300 flex items-center justify-center gap-2">
+                        <Star className="w-5 h-5 text-yellow-400" />
+                        Best Streak: {bestStreak}
+                        <Star className="w-5 h-5 text-yellow-400" />
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            );
+          }
+
+          if (gameState === 'results') {
+            const percentage = Math.round((score / questions.length) * 100);
+            return (
+              <div className="min-h-screen bg-gradient-to-b from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center p-4">
+                <div className="max-w-2xl w-full">
+                  <div className="bg-slate-800/50 backdrop-blur rounded-2xl p-8 border border-purple-500/30 shadow-2xl text-center">
+                    <Trophy className="w-24 h-24 mx-auto mb-4 text-yellow-400" />
+                    <h2 className="text-4xl font-bold text-white mb-4">Mission Complete!</h2>
+                    
+                    <div className="text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-pink-400 mb-6">
+                      {score}/{questions.length}
+                    </div>
+                    
+                    <p className="text-2xl text-purple-300 mb-8">
+                      {percentage >= 80 ? "🚀 Mars Explorer!" : 
+                       percentage >= 60 ? "🌟 Space Cadet!" : 
+                       percentage >= 40 ? "🌙 Lunar Learner!" : 
+                       "🌍 Earth Dweller"}
+                    </p>
+                    
+                    <div className="grid grid-cols-2 gap-4 mb-8">
+                      <div className="bg-slate-700/50 p-4 rounded-xl">
+                        <p className="text-purple-300 text-sm">Accuracy</p>
+                        <p className="text-white text-3xl font-bold">{percentage}%</p>
+                      </div>
+                      <div className="bg-slate-700/50 p-4 rounded-xl">
+                        <p className="text-purple-300 text-sm">Best Streak</p>
+                        <p className="text-white text-3xl font-bold">{bestStreak}</p>
+                      </div>
+                    </div>
+                    
+                    <button
+                      onClick={() => setGameState('menu')}
+                      className="w-full bg-gradient-to-r from-orange-500 to-pink-500 text-white py-4 rounded-xl font-bold text-xl hover:from-orange-600 hover:to-pink-600 transition-all transform hover:scale-105 shadow-lg flex items-center justify-center gap-2"
+                    >
+                      <RotateCcw className="w-5 h-5" />
+                      Play Again
+                    </button>
+                  </div>
+                </div>
+              </div>
+            );
+          }
+
+          const question = questions[currentQuestion];
+
+          return (
+            <div className="min-h-screen bg-gradient-to-b from-slate-900 via-purple-900 to-slate-900 p-4">
+              <div className="max-w-3xl mx-auto pt-8">
+                <div className="flex justify-between items-center mb-6">
+                  <div className="bg-slate-800/50 backdrop-blur px-4 py-2 rounded-lg border border-purple-500/30">
+                    <span className="text-purple-300 text-sm">Question {currentQuestion + 1}/{questions.length}</span>
+                  </div>
+                  <div className="bg-slate-800/50 backdrop-blur px-4 py-2 rounded-lg border border-purple-500/30 flex items-center gap-2">
+                    <Trophy className="w-4 h-4 text-yellow-400" />
+                    <span className="text-white font-bold">{score}</span>
+                  </div>
+                  {streak > 0 && (
+                    <div className="bg-orange-500/20 backdrop-blur px-4 py-2 rounded-lg border border-orange-500/50 flex items-center gap-2">
+                      <Star className="w-4 h-4 text-orange-400" />
+                      <span className="text-orange-200 font-bold">{streak} streak!</span>
+                    </div>
+                  )}
+                </div>
+
+                <div className="bg-slate-800/50 backdrop-blur rounded-2xl p-8 border border-purple-500/30 shadow-2xl">
+                  <div className="flex items-center gap-3 mb-4">
+                    <span className="px-3 py-1 bg-purple-500/30 rounded-full text-purple-200 text-sm">
+                      {question.category}
+                    </span>
+                    <span className={`px-3 py-1 bg-slate-700/50 rounded-full text-sm font-semibold ${getDifficultyColor(question.difficulty)}`}>
+                      {question.difficulty.toUpperCase()}
+                    </span>
+                  </div>
+
+                  <h3 className="text-2xl font-bold text-white mb-8">{question.question}</h3>
+
+                  <div className="space-y-3">
+                    {question.options.map((option, index) => {
+                      let bgColor = 'bg-slate-700/30 hover:bg-slate-700/50';
+                      let borderColor = 'border-slate-600';
+                      
+                      if (showResult) {
+                        if (index === question.correct) {
+                          bgColor = 'bg-green-500/30 border-green-400';
+                          borderColor = 'border-green-400';
+                        } else if (index === selectedAnswer) {
+                          bgColor = 'bg-red-500/30 border-red-400';
+                          borderColor = 'border-red-400';
+                        }
+                      }
+
+                      return (
+                        <button
+                          key={index}
+                          onClick={() => handleAnswer(index)}
+                          disabled={showResult}
+                          className={`w-full p-4 rounded-xl border-2 ${borderColor} ${bgColor} text-white text-left transition-all transform hover:scale-102 disabled:cursor-not-allowed`}
+                        >
+                          {option}
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  {showResult && (
+                    <div className="mt-6">
+                      <button
+                        onClick={nextQuestion}
+                        className="w-full bg-gradient-to-r from-orange-500 to-pink-500 text-white py-3 rounded-xl font-bold hover:from-orange-600 hover:to-pink-600 transition-all"
+                      >
+                        {currentQuestion < questions.length - 1 ? 'Next Question' : 'See Results'}
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<MarsTrivia />);
+    </script>
+</body>
+</html>
