@@ -49,6 +49,7 @@
           {
             id: 'armstrong',
             name: 'Neil Armstrong',
+            image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Neil_Armstrong_pose.jpg/440px-Neil_Armstrong_pose.jpg',
             emoji: '👨‍🚀',
             color: 'from-blue-500 to-cyan-500',
             description: 'First person on the Moon'
@@ -56,6 +57,7 @@
           {
             id: 'chiang',
             name: 'Mung Chiang',
+            image: 'https://www.purdue.edu/president/images/about/mung-chiang-headshot.jpg',
             emoji: '🎓',
             color: 'from-yellow-500 to-orange-500',
             description: 'Purdue President'
@@ -63,6 +65,7 @@
           {
             id: 'pete',
             name: 'Purdue Pete',
+            image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Purdue_Pete_logo.svg/440px-Purdue_Pete_logo.svg.png',
             emoji: '🔨',
             color: 'from-gray-700 to-yellow-600',
             description: 'Boilermaker Mascot'
@@ -70,6 +73,7 @@
           {
             id: 'grissom',
             name: 'Gus Grissom',
+            image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Gus_Grissom.jpg/440px-Gus_Grissom.jpg',
             emoji: '🚀',
             color: 'from-red-500 to-pink-500',
             description: 'Apollo Astronaut'
@@ -77,6 +81,7 @@
           {
             id: 'cernan',
             name: 'Eugene Cernan',
+            image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Eugene_Cernan_1969.jpg/440px-Eugene_Cernan_1969.jpg',
             emoji: '🌙',
             color: 'from-purple-500 to-indigo-500',
             description: 'Last person on Moon'
@@ -84,6 +89,7 @@
           {
             id: 'chaffee',
             name: 'Roger Chaffee',
+            image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Roger_Chaffee_1964.jpg/440px-Roger_Chaffee_1964.jpg',
             emoji: '⭐',
             color: 'from-green-500 to-teal-500',
             description: 'Apollo 1 Astronaut'
@@ -312,8 +318,19 @@
                               : 'border-gray-600 bg-gray-700/30 hover:border-yellow-500/50'
                           }`}
                         >
-                          <div className={`text-5xl mb-2 bg-gradient-to-r ${avatar.color} p-3 rounded-lg inline-block`}>
-                            {avatar.emoji}
+                          <div className="mb-3 flex justify-center">
+                            <img 
+                              src={avatar.image} 
+                              alt={avatar.name}
+                              className="w-24 h-24 rounded-full object-cover border-4 border-gray-600"
+                              onError={(e) => {
+                                e.target.style.display = 'none';
+                                e.target.nextSibling.style.display = 'block';
+                              }}
+                            />
+                            <div className={`hidden text-5xl bg-gradient-to-r ${avatar.color} p-3 rounded-full w-24 h-24 flex items-center justify-center`}>
+                              {avatar.emoji}
+                            </div>
                           </div>
                           <div className="text-white font-bold text-sm">{avatar.name}</div>
                           <div className="text-gray-400 text-xs">{avatar.description}</div>
@@ -360,8 +377,19 @@
                     <h2 className="text-4xl font-bold text-white mb-4 text-center">Mission Complete!</h2>
                     
                     <div className="flex items-center justify-center gap-4 mb-6">
-                      <div className={`text-5xl bg-gradient-to-r ${selectedAvatar.color} p-3 rounded-lg`}>
-                        {selectedAvatar.emoji}
+                      <div className="relative">
+                        <img 
+                          src={selectedAvatar.image} 
+                          alt={selectedAvatar.name}
+                          className="w-20 h-20 rounded-full object-cover border-4 border-yellow-400"
+                          onError={(e) => {
+                            e.target.style.display = 'none';
+                            e.target.nextSibling.style.display = 'block';
+                          }}
+                        />
+                        <div className={`hidden text-5xl bg-gradient-to-r ${selectedAvatar.color} p-3 rounded-full`}>
+                          {selectedAvatar.emoji}
+                        </div>
                       </div>
                       <div>
                         <div className="text-2xl font-bold text-white">{playerName}</div>
@@ -423,7 +451,18 @@
                               }`}
                             >
                               <div className="text-2xl font-bold text-yellow-400 w-8">#{index + 1}</div>
-                              <div className="text-3xl">{avatar?.emoji || '👤'}</div>
+                              <div className="relative">
+                                <img 
+                                  src={avatar?.image} 
+                                  alt={avatar?.name}
+                                  className="w-12 h-12 rounded-full object-cover border-2 border-gray-600"
+                                  onError={(e) => {
+                                    e.target.style.display = 'none';
+                                    e.target.nextSibling.style.display = 'block';
+                                  }}
+                                />
+                                <div className="hidden text-3xl">{avatar?.emoji || '👤'}</div>
+                              </div>
                               <div className="flex-1">
                                 <div className="text-white font-bold">{entry.name}</div>
                                 <div className="text-gray-400 text-sm">{avatar?.name || 'Unknown'}</div>
@@ -450,7 +489,16 @@
               <div className="max-w-3xl mx-auto pt-8">
                 <div className="flex justify-between items-center mb-6 flex-wrap gap-2">
                   <div className="bg-gray-800/50 backdrop-blur px-4 py-2 rounded-lg border border-yellow-500/30 flex items-center gap-2">
-                    <div className="text-2xl">{selectedAvatar.emoji}</div>
+                    <img 
+                      src={selectedAvatar.image} 
+                      alt={selectedAvatar.name}
+                      className="w-8 h-8 rounded-full object-cover border-2 border-yellow-400"
+                      onError={(e) => {
+                        e.target.style.display = 'none';
+                        e.target.nextSibling.style.display = 'inline-block';
+                      }}
+                    />
+                    <div className="hidden text-2xl">{selectedAvatar.emoji}</div>
                     <span className="text-white font-bold">{playerName}</span>
                   </div>
                   <div className="bg-gray-800/50 backdrop-blur px-4 py-2 rounded-lg border border-yellow-500/30">
