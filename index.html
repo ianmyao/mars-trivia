@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mars & Space Trivia</title>
+    <title>Purdue Space Trivia</title>
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -12,7 +12,7 @@
 <body>
     <div id="root"></div>
     <script type="text/babel">
-        const { useState } = React;
+        const { useState, useEffect } = React;
 
         // Simple icon components using SVG
         const Rocket = ({ className }) => (
@@ -45,90 +45,192 @@
             </svg>
         );
 
-        const triviaQuestions = [
+        const avatars = [
           {
-            category: "Mars Settlement",
-            question: "What year did SpaceX first propose colonizing Mars?",
-            options: ["2012", "2016", "2002", "2020"],
-            correct: 2,
-            difficulty: "medium"
+            id: 'armstrong',
+            name: 'Neil Armstrong',
+            emoji: '👨‍🚀',
+            color: 'from-blue-500 to-cyan-500',
+            description: 'First person on the Moon'
           },
           {
-            category: "Mars Settlement",
-            question: "What is the approximate delay in communication between Earth and Mars?",
-            options: ["3-22 minutes", "30 seconds", "1 hour", "5 minutes"],
-            correct: 0,
-            difficulty: "hard"
+            id: 'chiang',
+            name: 'Mung Chiang',
+            emoji: '🎓',
+            color: 'from-yellow-500 to-orange-500',
+            description: 'Purdue President'
           },
           {
-            category: "Mars Facts",
-            question: "How long is a Martian day (sol)?",
-            options: ["20 hours", "24 hours 37 minutes", "30 hours", "22 hours"],
-            correct: 1,
-            difficulty: "medium"
+            id: 'pete',
+            name: 'Purdue Pete',
+            emoji: '🔨',
+            color: 'from-gray-700 to-yellow-600',
+            description: 'Boilermaker Mascot'
           },
           {
-            category: "Space Exploration",
-            question: "Which rover landed on Mars in 2021?",
-            options: ["Curiosity", "Spirit", "Perseverance", "Opportunity"],
-            correct: 2,
-            difficulty: "easy"
+            id: 'grissom',
+            name: 'Gus Grissom',
+            emoji: '🚀',
+            color: 'from-red-500 to-pink-500',
+            description: 'Apollo Astronaut'
           },
           {
-            category: "Mars Settlement",
-            question: "What is the main component needed to produce rocket fuel on Mars?",
-            options: ["Nitrogen", "Water ice", "Methane", "Oxygen only"],
-            correct: 1,
-            difficulty: "hard"
+            id: 'cernan',
+            name: 'Eugene Cernan',
+            emoji: '🌙',
+            color: 'from-purple-500 to-indigo-500',
+            description: 'Last person on Moon'
           },
           {
-            category: "Space History",
-            question: "What year did humans first land on the Moon?",
-            options: ["1965", "1969", "1972", "1967"],
-            correct: 1,
-            difficulty: "easy"
-          },
-          {
-            category: "Mars Facts",
-            question: "What percentage of Earth's gravity does Mars have?",
-            options: ["38%", "50%", "25%", "62%"],
-            correct: 0,
-            difficulty: "medium"
-          },
-          {
-            category: "Space Exploration",
-            question: "Which company is developing the Starship for Mars missions?",
-            options: ["Blue Origin", "NASA", "SpaceX", "Boeing"],
-            correct: 2,
-            difficulty: "easy"
-          },
-          {
-            category: "Mars Settlement",
-            question: "What is the primary challenge for human habitation on Mars?",
-            options: ["Lack of water", "Radiation exposure", "Temperature", "Low oxygen"],
-            correct: 1,
-            difficulty: "medium"
-          },
-          {
-            category: "Space History",
-            question: "Which was the first Mars rover to land successfully?",
-            options: ["Sojourner", "Spirit", "Curiosity", "Pathfinder"],
-            correct: 0,
-            difficulty: "hard"
+            id: 'chaffee',
+            name: 'Roger Chaffee',
+            emoji: '⭐',
+            color: 'from-green-500 to-teal-500',
+            description: 'Apollo 1 Astronaut'
           }
         ];
 
-        function MarsTrivia() {
-          const [gameState, setGameState] = useState('menu');
+        const triviaQuestions = [
+          {
+            category: "Purdue Astronauts",
+            question: "How many Purdue graduates have walked on the Moon?",
+            options: ["3", "5", "7", "2"],
+            correct: 0,
+            difficulty: "medium"
+          },
+          {
+            category: "Purdue History",
+            question: "What year was Neil Armstrong's first Moon landing?",
+            options: ["1967", "1968", "1969", "1970"],
+            correct: 2,
+            difficulty: "easy"
+          },
+          {
+            category: "Purdue Astronauts",
+            question: "Which Purdue astronaut was the last person to walk on the Moon?",
+            options: ["Neil Armstrong", "Eugene Cernan", "Gus Grissom", "Roger Chaffee"],
+            correct: 1,
+            difficulty: "medium"
+          },
+          {
+            category: "Space Achievement",
+            question: "How many Purdue alumni have become NASA astronauts?",
+            options: ["10", "15", "27", "35"],
+            correct: 2,
+            difficulty: "hard"
+          },
+          {
+            category: "Purdue History",
+            question: "What college is Purdue's School of Aeronautics and Astronautics part of?",
+            options: ["Engineering", "Science", "Technology", "Aviation"],
+            correct: 0,
+            difficulty: "easy"
+          },
+          {
+            category: "Space Achievement",
+            question: "Which Purdue graduate commanded the first Gemini mission?",
+            options: ["Gus Grissom", "Neil Armstrong", "Eugene Cernan", "Roger Chaffee"],
+            correct: 0,
+            difficulty: "hard"
+          },
+          {
+            category: "Purdue Astronauts",
+            question: "What Apollo mission did Neil Armstrong command?",
+            options: ["Apollo 9", "Apollo 10", "Apollo 11", "Apollo 12"],
+            correct: 2,
+            difficulty: "medium"
+          },
+          {
+            category: "Purdue History",
+            question: "What is Purdue's nickname related to space exploration?",
+            options: ["Space University", "Astronaut Academy", "Cradle of Astronauts", "Moon School"],
+            correct: 2,
+            difficulty: "easy"
+          },
+          {
+            category: "Space Achievement",
+            question: "Which lunar mission was Eugene Cernan's final spaceflight?",
+            options: ["Apollo 15", "Apollo 16", "Apollo 17", "Apollo 18"],
+            correct: 2,
+            difficulty: "hard"
+          },
+          {
+            category: "Purdue History",
+            question: "What engineering degree did Neil Armstrong earn from Purdue?",
+            options: ["Mechanical Engineering", "Aeronautical Engineering", "Electrical Engineering", "Chemical Engineering"],
+            correct: 1,
+            difficulty: "medium"
+          }
+        ];
+
+        function PurdueSpaceTrivia() {
+          const [gameState, setGameState] = useState('avatar');
+          const [selectedAvatar, setSelectedAvatar] = useState(null);
+          const [playerName, setPlayerName] = useState('');
           const [currentQuestion, setCurrentQuestion] = useState(0);
           const [score, setScore] = useState(0);
           const [selectedAnswer, setSelectedAnswer] = useState(null);
           const [showResult, setShowResult] = useState(false);
           const [questions, setQuestions] = useState([]);
           const [streak, setStreak] = useState(0);
-          const [bestStreak, setBestStreak] = useState(0);
+          const [leaderboard, setLeaderboard] = useState([]);
+          const [loadingLeaderboard, setLoadingLeaderboard] = useState(false);
+
+          useEffect(() => {
+            if (gameState === 'results') {
+              loadLeaderboard();
+            }
+          }, [gameState]);
+
+          const loadLeaderboard = async () => {
+            setLoadingLeaderboard(true);
+            try {
+              const keys = await window.storage.list('purdue-trivia:', true);
+              if (keys && keys.keys) {
+                const scores = await Promise.all(
+                  keys.keys.map(async (key) => {
+                    try {
+                      const result = await window.storage.get(key, true);
+                      return result ? JSON.parse(result.value) : null;
+                    } catch {
+                      return null;
+                    }
+                  })
+                );
+                const validScores = scores.filter(s => s !== null);
+                validScores.sort((a, b) => b.score - a.score);
+                setLeaderboard(validScores.slice(0, 10));
+              }
+            } catch (error) {
+              console.log('Leaderboard not available yet');
+              setLeaderboard([]);
+            }
+            setLoadingLeaderboard(false);
+          };
+
+          const saveScore = async () => {
+            if (!playerName.trim()) return;
+            
+            const scoreData = {
+              name: playerName.trim(),
+              score: score,
+              total: questions.length,
+              avatar: selectedAvatar.id,
+              timestamp: Date.now()
+            };
+
+            try {
+              const key = `purdue-trivia:${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+              await window.storage.set(key, JSON.stringify(scoreData), true);
+              await loadLeaderboard();
+            } catch (error) {
+              console.error('Failed to save score:', error);
+            }
+          };
 
           const startGame = () => {
+            if (!selectedAvatar || !playerName.trim()) return;
+            
             const shuffled = [...triviaQuestions].sort(() => Math.random() - 0.5);
             setQuestions(shuffled);
             setCurrentQuestion(0);
@@ -148,11 +250,7 @@
             const isCorrect = index === questions[currentQuestion].correct;
             if (isCorrect) {
               setScore(score + 1);
-              const newStreak = streak + 1;
-              setStreak(newStreak);
-              if (newStreak > bestStreak) {
-                setBestStreak(newStreak);
-              }
+              setStreak(streak + 1);
             } else {
               setStreak(0);
             }
@@ -164,8 +262,21 @@
               setSelectedAnswer(null);
               setShowResult(false);
             } else {
+              saveScore();
               setGameState('results');
             }
+          };
+
+          const resetGame = () => {
+            setGameState('avatar');
+            setSelectedAvatar(null);
+            setPlayerName('');
+            setCurrentQuestion(0);
+            setScore(0);
+            setStreak(0);
+            setQuestions([]);
+            setShowResult(false);
+            setSelectedAnswer(null);
           };
 
           const getDifficultyColor = (difficulty) => {
@@ -177,45 +288,63 @@
             }
           };
 
-          if (gameState === 'menu') {
+          if (gameState === 'avatar') {
             return (
-              <div className="min-h-screen bg-gradient-to-b from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center p-4">
-                <div className="max-w-2xl w-full">
-                  <div className="text-center mb-8 animate-pulse">
-                    <Rocket className="w-24 h-24 mx-auto mb-4 text-orange-400" />
-                    <h1 className="text-6xl font-bold text-white mb-4">Mars Trivia</h1>
-                    <p className="text-xl text-purple-300">Test Your Space Knowledge</p>
+              <div className="min-h-screen bg-gradient-to-b from-gray-900 via-yellow-900 to-gray-900 flex items-center justify-center p-4">
+                <div className="max-w-4xl w-full">
+                  <div className="text-center mb-8">
+                    <Rocket className="w-20 h-20 mx-auto mb-4 text-yellow-400 animate-bounce" />
+                    <h1 className="text-5xl font-bold text-white mb-2">Purdue Space Trivia</h1>
+                    <p className="text-xl text-yellow-300">Cradle of Astronauts 🚀</p>
                   </div>
                   
-                  <div className="bg-slate-800/50 backdrop-blur rounded-2xl p-8 border border-purple-500/30 shadow-2xl">
-                    <h2 className="text-2xl font-bold text-white mb-4 flex items-center gap-2">
-                      <Brain className="w-6 h-6 text-purple-400" />
-                      How to Play
-                    </h2>
-                    <ul className="text-purple-200 space-y-2 mb-6">
-                      <li>• Answer 10 questions about Mars settlement and space exploration</li>
-                      <li>• Build a streak by answering correctly</li>
-                      <li>• Questions range from easy to hard difficulty</li>
-                      <li>• Track your high score!</li>
-                    </ul>
+                  <div className="bg-gray-800/50 backdrop-blur rounded-2xl p-8 border border-yellow-500/30 shadow-2xl">
+                    <h2 className="text-2xl font-bold text-white mb-6 text-center">Choose Your Avatar</h2>
                     
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
+                      {avatars.map((avatar) => (
+                        <button
+                          key={avatar.id}
+                          onClick={() => setSelectedAvatar(avatar)}
+                          className={`p-4 rounded-xl border-2 transition-all transform hover:scale-105 ${
+                            selectedAvatar?.id === avatar.id
+                              ? 'border-yellow-400 bg-yellow-500/20 scale-105'
+                              : 'border-gray-600 bg-gray-700/30 hover:border-yellow-500/50'
+                          }`}
+                        >
+                          <div className={`text-5xl mb-2 bg-gradient-to-r ${avatar.color} p-3 rounded-lg inline-block`}>
+                            {avatar.emoji}
+                          </div>
+                          <div className="text-white font-bold text-sm">{avatar.name}</div>
+                          <div className="text-gray-400 text-xs">{avatar.description}</div>
+                        </button>
+                      ))}
+                    </div>
+
+                    <div className="mb-6">
+                      <label className="block text-white font-bold mb-2">Enter Your Name</label>
+                      <input
+                        type="text"
+                        value={playerName}
+                        onChange={(e) => setPlayerName(e.target.value)}
+                        placeholder="Boilermaker Name"
+                        maxLength={20}
+                        className="w-full p-3 rounded-lg bg-gray-700 text-white border-2 border-gray-600 focus:border-yellow-400 outline-none"
+                      />
+                    </div>
+
                     <button
                       onClick={startGame}
-                      className="w-full bg-gradient-to-r from-orange-500 to-pink-500 text-white py-4 rounded-xl font-bold text-xl hover:from-orange-600 hover:to-pink-600 transition-all transform hover:scale-105 shadow-lg"
+                      disabled={!selectedAvatar || !playerName.trim()}
+                      className={`w-full py-4 rounded-xl font-bold text-xl transition-all transform ${
+                        selectedAvatar && playerName.trim()
+                          ? 'bg-gradient-to-r from-yellow-500 to-orange-500 text-gray-900 hover:from-yellow-600 hover:to-orange-600 hover:scale-105 shadow-lg'
+                          : 'bg-gray-600 text-gray-400 cursor-not-allowed'
+                      }`}
                     >
-                      Start Mission
+                      🚀 Start Mission
                     </button>
                   </div>
-                  
-                  {bestStreak > 0 && (
-                    <div className="mt-6 text-center">
-                      <p className="text-purple-300 flex items-center justify-center gap-2">
-                        <Star className="w-5 h-5 text-yellow-400" />
-                        Best Streak: {bestStreak}
-                        <Star className="w-5 h-5 text-yellow-400" />
-                      </p>
-                    </div>
-                  )}
                 </div>
               </div>
             );
@@ -224,41 +353,90 @@
           if (gameState === 'results') {
             const percentage = Math.round((score / questions.length) * 100);
             return (
-              <div className="min-h-screen bg-gradient-to-b from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center p-4">
-                <div className="max-w-2xl w-full">
-                  <div className="bg-slate-800/50 backdrop-blur rounded-2xl p-8 border border-purple-500/30 shadow-2xl text-center">
-                    <Trophy className="w-24 h-24 mx-auto mb-4 text-yellow-400" />
-                    <h2 className="text-4xl font-bold text-white mb-4">Mission Complete!</h2>
+              <div className="min-h-screen bg-gradient-to-b from-gray-900 via-yellow-900 to-gray-900 p-4 overflow-y-auto">
+                <div className="max-w-4xl mx-auto py-8">
+                  <div className="bg-gray-800/50 backdrop-blur rounded-2xl p-8 border border-yellow-500/30 shadow-2xl mb-6">
+                    <Trophy className="w-20 h-20 mx-auto mb-4 text-yellow-400" />
+                    <h2 className="text-4xl font-bold text-white mb-4 text-center">Mission Complete!</h2>
                     
-                    <div className="text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-pink-400 mb-6">
+                    <div className="flex items-center justify-center gap-4 mb-6">
+                      <div className={`text-5xl bg-gradient-to-r ${selectedAvatar.color} p-3 rounded-lg`}>
+                        {selectedAvatar.emoji}
+                      </div>
+                      <div>
+                        <div className="text-2xl font-bold text-white">{playerName}</div>
+                        <div className="text-gray-400">{selectedAvatar.name}</div>
+                      </div>
+                    </div>
+
+                    <div className="text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-400 mb-4 text-center">
                       {score}/{questions.length}
                     </div>
                     
-                    <p className="text-2xl text-purple-300 mb-8">
-                      {percentage >= 80 ? "🚀 Mars Explorer!" : 
+                    <p className="text-2xl text-yellow-300 mb-6 text-center">
+                      {percentage >= 80 ? "🚀 Astronaut Legend!" : 
                        percentage >= 60 ? "🌟 Space Cadet!" : 
-                       percentage >= 40 ? "🌙 Lunar Learner!" : 
-                       "🌍 Earth Dweller"}
+                       percentage >= 40 ? "🔧 Boilermaker in Training!" : 
+                       "🎓 Keep Studying, Boiler!"}
                     </p>
                     
-                    <div className="grid grid-cols-2 gap-4 mb-8">
-                      <div className="bg-slate-700/50 p-4 rounded-xl">
-                        <p className="text-purple-300 text-sm">Accuracy</p>
+                    <div className="grid grid-cols-2 gap-4 mb-6">
+                      <div className="bg-gray-700/50 p-4 rounded-xl text-center">
+                        <p className="text-yellow-300 text-sm">Accuracy</p>
                         <p className="text-white text-3xl font-bold">{percentage}%</p>
                       </div>
-                      <div className="bg-slate-700/50 p-4 rounded-xl">
-                        <p className="text-purple-300 text-sm">Best Streak</p>
-                        <p className="text-white text-3xl font-bold">{bestStreak}</p>
+                      <div className="bg-gray-700/50 p-4 rounded-xl text-center">
+                        <p className="text-yellow-300 text-sm">Best Streak</p>
+                        <p className="text-white text-3xl font-bold">{streak}</p>
                       </div>
                     </div>
                     
                     <button
-                      onClick={() => setGameState('menu')}
-                      className="w-full bg-gradient-to-r from-orange-500 to-pink-500 text-white py-4 rounded-xl font-bold text-xl hover:from-orange-600 hover:to-pink-600 transition-all transform hover:scale-105 shadow-lg flex items-center justify-center gap-2"
+                      onClick={resetGame}
+                      className="w-full bg-gradient-to-r from-yellow-500 to-orange-500 text-gray-900 py-4 rounded-xl font-bold text-xl hover:from-yellow-600 hover:to-orange-600 transition-all transform hover:scale-105 shadow-lg flex items-center justify-center gap-2"
                     >
                       <RotateCcw className="w-5 h-5" />
                       Play Again
                     </button>
+                  </div>
+
+                  <div className="bg-gray-800/50 backdrop-blur rounded-2xl p-8 border border-yellow-500/30 shadow-2xl">
+                    <h3 className="text-2xl font-bold text-white mb-4 flex items-center gap-2">
+                      <Trophy className="w-6 h-6 text-yellow-400" />
+                      Leaderboard
+                    </h3>
+                    
+                    {loadingLeaderboard ? (
+                      <p className="text-gray-400 text-center py-4">Loading scores...</p>
+                    ) : leaderboard.length === 0 ? (
+                      <p className="text-gray-400 text-center py-4">Be the first to set a score!</p>
+                    ) : (
+                      <div className="space-y-2">
+                        {leaderboard.map((entry, index) => {
+                          const avatar = avatars.find(a => a.id === entry.avatar);
+                          const isCurrentPlayer = entry.name === playerName && entry.timestamp > Date.now() - 5000;
+                          return (
+                            <div
+                              key={index}
+                              className={`flex items-center gap-4 p-3 rounded-lg ${
+                                isCurrentPlayer ? 'bg-yellow-500/20 border-2 border-yellow-400' : 'bg-gray-700/30'
+                              }`}
+                            >
+                              <div className="text-2xl font-bold text-yellow-400 w-8">#{index + 1}</div>
+                              <div className="text-3xl">{avatar?.emoji || '👤'}</div>
+                              <div className="flex-1">
+                                <div className="text-white font-bold">{entry.name}</div>
+                                <div className="text-gray-400 text-sm">{avatar?.name || 'Unknown'}</div>
+                              </div>
+                              <div className="text-right">
+                                <div className="text-yellow-400 font-bold text-xl">{entry.score}/{entry.total}</div>
+                                <div className="text-gray-400 text-sm">{Math.round((entry.score/entry.total)*100)}%</div>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -268,13 +446,17 @@
           const question = questions[currentQuestion];
 
           return (
-            <div className="min-h-screen bg-gradient-to-b from-slate-900 via-purple-900 to-slate-900 p-4">
+            <div className="min-h-screen bg-gradient-to-b from-gray-900 via-yellow-900 to-gray-900 p-4">
               <div className="max-w-3xl mx-auto pt-8">
-                <div className="flex justify-between items-center mb-6">
-                  <div className="bg-slate-800/50 backdrop-blur px-4 py-2 rounded-lg border border-purple-500/30">
-                    <span className="text-purple-300 text-sm">Question {currentQuestion + 1}/{questions.length}</span>
+                <div className="flex justify-between items-center mb-6 flex-wrap gap-2">
+                  <div className="bg-gray-800/50 backdrop-blur px-4 py-2 rounded-lg border border-yellow-500/30 flex items-center gap-2">
+                    <div className="text-2xl">{selectedAvatar.emoji}</div>
+                    <span className="text-white font-bold">{playerName}</span>
                   </div>
-                  <div className="bg-slate-800/50 backdrop-blur px-4 py-2 rounded-lg border border-purple-500/30 flex items-center gap-2">
+                  <div className="bg-gray-800/50 backdrop-blur px-4 py-2 rounded-lg border border-yellow-500/30">
+                    <span className="text-yellow-300 text-sm">Question {currentQuestion + 1}/{questions.length}</span>
+                  </div>
+                  <div className="bg-gray-800/50 backdrop-blur px-4 py-2 rounded-lg border border-yellow-500/30 flex items-center gap-2">
                     <Trophy className="w-4 h-4 text-yellow-400" />
                     <span className="text-white font-bold">{score}</span>
                   </div>
@@ -286,12 +468,12 @@
                   )}
                 </div>
 
-                <div className="bg-slate-800/50 backdrop-blur rounded-2xl p-8 border border-purple-500/30 shadow-2xl">
-                  <div className="flex items-center gap-3 mb-4">
-                    <span className="px-3 py-1 bg-purple-500/30 rounded-full text-purple-200 text-sm">
+                <div className="bg-gray-800/50 backdrop-blur rounded-2xl p-8 border border-yellow-500/30 shadow-2xl">
+                  <div className="flex items-center gap-3 mb-4 flex-wrap">
+                    <span className="px-3 py-1 bg-yellow-500/30 rounded-full text-yellow-200 text-sm">
                       {question.category}
                     </span>
-                    <span className={`px-3 py-1 bg-slate-700/50 rounded-full text-sm font-semibold ${getDifficultyColor(question.difficulty)}`}>
+                    <span className={`px-3 py-1 bg-gray-700/50 rounded-full text-sm font-semibold ${getDifficultyColor(question.difficulty)}`}>
                       {question.difficulty.toUpperCase()}
                     </span>
                   </div>
@@ -300,8 +482,8 @@
 
                   <div className="space-y-3">
                     {question.options.map((option, index) => {
-                      let bgColor = 'bg-slate-700/30 hover:bg-slate-700/50';
-                      let borderColor = 'border-slate-600';
+                      let bgColor = 'bg-gray-700/30 hover:bg-gray-700/50';
+                      let borderColor = 'border-gray-600';
                       
                       if (showResult) {
                         if (index === question.correct) {
@@ -330,9 +512,9 @@
                     <div className="mt-6">
                       <button
                         onClick={nextQuestion}
-                        className="w-full bg-gradient-to-r from-orange-500 to-pink-500 text-white py-3 rounded-xl font-bold hover:from-orange-600 hover:to-pink-600 transition-all"
+                        className="w-full bg-gradient-to-r from-yellow-500 to-orange-500 text-gray-900 py-3 rounded-xl font-bold hover:from-yellow-600 hover:to-orange-600 transition-all"
                       >
-                        {currentQuestion < questions.length - 1 ? 'Next Question' : 'See Results'}
+                        {currentQuestion < questions.length - 1 ? 'Next Question →' : 'See Results 🏆'}
                       </button>
                     </div>
                   )}
@@ -343,7 +525,7 @@
         }
 
         const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<MarsTrivia />);
+        root.render(<PurdueSpaceTrivia />);
     </script>
 </body>
 </html>
